@@ -1,0 +1,53 @@
+// Declaracion de colores para el Tema que se va usar en la pagina web
+$neon_purple: #c724b1;
+$andes_sky: #71dbd4;
+$imperial_purple: #642f6c;
+$explorer_blue: #58a7af;
+$filtered_light: #b3b0c4;
+$magic_night: #3a3a59;
+
+@font-face {
+  font-family: sound_wave;
+  src: url(font/SoundWave-GOK7a.ttf);
+}
+
+@mixin flex_column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  @include flex_column;
+  font-family: sound_wave;
+  color: $filtered_light;
+  background: linear-gradient(90deg, $neon_purple, $imperial_purple);
+}
+
+article {
+  @include flex_column;
+  background-color: $magic_night;
+  padding: 20px;
+  border-radius: 20px;
+  h1 {
+    background-color: $filtered_light;
+    width: 350px;
+    height: 100px;
+  }
+}
+
+button {
+  background-color: $imperial_purple;
+  color: $andes_sky;
+  width: 75px;
+  height: 75px;
+  margin: 3px;
+  border: none;
+  font-size: 25px;
+  transition: background-color 1s;
+}
+
+button:hover {
+  background-color: $neon_purple;
+}
