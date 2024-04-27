@@ -1,10 +1,11 @@
 // Declaracion de colores para el Tema que se va usar en la pagina web
 $neon_purple: #c724b1;
 $andes_sky: #71dbd4;
-$imperial_purple: #642f6c;
+$imperial_purple: #320938;
 $explorer_blue: #58a7af;
-$filtered_light: #b3b0c4;
-$magic_night: #3a3a59;
+$filtered_light: #c06ccd;
+$magic_night: #090937;
+$synth_city: url(https://wallpapercave.com/wp/wp2343898.jpg);
 
 @font-face {
   font-family: sound_wave;
@@ -22,7 +23,8 @@ body {
   @include flex_column;
   font-family: sound_wave;
   color: $filtered_light;
-  background: linear-gradient(90deg, $neon_purple, $imperial_purple);
+  background-image: $synth_city;
+  background-size: cover;
 }
 
 article {
