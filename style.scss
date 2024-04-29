@@ -7,11 +7,6 @@ $filtered_light: #c06ccd;
 $magic_night: #090937;
 $synth_city: url(https://wallpapercave.com/wp/wp2343898.jpg);
 
-@font-face {
-  font-family: sound_wave;
-  src: url(font/SoundWave-GOK7a.ttf);
-}
-
 @mixin flex_column {
   display: flex;
   flex-direction: column;
@@ -21,7 +16,7 @@ $synth_city: url(https://wallpapercave.com/wp/wp2343898.jpg);
 
 body {
   @include flex_column;
-  font-family: sound_wave;
+  font-family: "Orbitron", "Segoe UI";
   color: $filtered_light;
   background-image: $synth_city;
   background-size: cover;
@@ -34,6 +29,10 @@ article {
   border-radius: 20px;
   h1 {
     background-color: $filtered_light;
+    color: $andes_sky;
+    text-align: end;
+    line-height: 160px;
+    font-size: 40px;
     width: 350px;
     height: 100px;
   }
