@@ -7,7 +7,27 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-let linea_valores: number[] = [];
+let linea_valores: any[] = [];
+let linea_condensada: any[] = [];
+let punto_de_partida = 0;
+
+//Necesito un sistema que automaticamente declare nuevas variables para almacenar diferentes partes del arreglo separados a base de simbolos
+//Tiene que ser capaz de escalar dinamicamente en base del gran numero de operaciones que el usuario pueda ingresar
+function calcular_resultado(): void {
+  linea_valores.forEach((item) => {
+    //Quizas algo que pueda trabajar dinamicamente con arreglos a base de una operacion?
+    if (item === "+" || item === "-" || item === "*" || item === "/") {
+      let valor_condensado = linea_valores.slice(
+        punto_de_partida,
+        linea_valores.indexOf(item)
+      );
+      let valor_unido = valor_condensado.join("");
+      linea_condensada.push(valor_unido);
+      console.log(valor_unido);
+    }
+    //Por cada simbolo de una operacion agregar uno a un contador y en base a ese contador iterar sobre el arreglo y realizar la logica necesaria?
+  });
+}
 
 //La funcion que se ejecuta cuando un boton de la calculadora es clickeado toma como parametro el evento del Mouse
 function clickeo_boton(evento: MouseEvent) {
@@ -48,6 +68,21 @@ function clickeo_boton(evento: MouseEvent) {
       break;
     case "9":
       linea_valores.push(9);
+      break;
+    case "+":
+      linea_valores.push("+");
+      break;
+    case "-":
+      linea_valores.push("-");
+      break;
+    case "*":
+      linea_valores.push("*");
+      break;
+    case "/":
+      linea_valores.push("/");
+      break;
+    case "=":
+      calcular_resultado();
       break;
     case "C":
       linea_valores = [];
