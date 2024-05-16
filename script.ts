@@ -16,14 +16,18 @@ let punto_de_partida = 0;
 function calcular_resultado(): void {
   linea_valores.forEach((item) => {
     //Quizas algo que pueda trabajar dinamicamente con arreglos a base de una operacion?
+    //Actualmente el sistema basa el indexOf en el primer elemento encontrado de ese simbolo con lo cual siempre retorna el mismo valor de indice de la operacion, ej: si hay dos + en un calculo que el usuario ingreso indexOf siempre va a retornar el indice del primer + en el array y nunca del segundo
     if (item === "+" || item === "-" || item === "*" || item === "/") {
       let valor_condensado = linea_valores.slice(
         punto_de_partida,
         linea_valores.indexOf(item)
       );
+      console.log(linea_valores.indexOf(item));
       let valor_unido = valor_condensado.join("");
       linea_condensada.push(valor_unido);
-      console.log(valor_unido);
+      console.log(linea_condensada);
+      punto_de_partida = punto_de_partida + linea_valores.indexOf(item) + 1;
+      console.log(punto_de_partida);
     }
     //Por cada simbolo de una operacion agregar uno a un contador y en base a ese contador iterar sobre el arreglo y realizar la logica necesaria?
   });
