@@ -17,17 +17,29 @@ function calcular_resultado(): void {
   linea_valores.forEach((item) => {
     //Quizas algo que pueda trabajar dinamicamente con arreglos a base de una operacion?
     //Actualmente el sistema basa el indexOf en el primer elemento encontrado de ese simbolo con lo cual siempre retorna el mismo valor de indice de la operacion, ej: si hay dos + en un calculo que el usuario ingreso indexOf siempre va a retornar el indice del primer + en el array y nunca del segundo
+    //Una manera de resolverlo podria ser con un iterador que recorre el arreglo uno por uno y que calcula dinamicamente la cantidad de numeros entre simbolos
     if (item === "+" || item === "-" || item === "*" || item === "/") {
+      let posicion_simbolo = linea_valores.findIndex(
+        (simbolo, indice) =>
+          simbolo === item && indice > linea_valores.indexOf(item)
+      );
+      console.log("El valor de indexOf es: " + linea_valores.indexOf(item));
+      console.log("El valor de punto de partida es: " + punto_de_partida);
+      console.log(
+        "La posicion del proximo simbolo en el arreglo es: " + posicion_simbolo
+      );
+      //Actualmente el problema es que indexOf siempre retorna el mismo valor y punto de partida empieza en 0 con lo cual ninguno de los dos es util para indicar a findIndex a que numero deberia ser mayor que el indice del elemento que esta buscando
       let valor_condensado = linea_valores.slice(
         punto_de_partida,
         linea_valores.indexOf(item)
       );
-      console.log(linea_valores.indexOf(item));
+      //console.log(linea_valores.indexOf(item));
       let valor_unido = valor_condensado.join("");
       linea_condensada.push(valor_unido);
       console.log(linea_condensada);
-      punto_de_partida = punto_de_partida + linea_valores.indexOf(item) + 1;
-      console.log(punto_de_partida);
+      let distancia = posicion_simbolo - punto_de_partida;
+      punto_de_partida = punto_de_partida + distancia + 1;
+      console.log("La proxima serie de numeros empieza en:" + punto_de_partida);
     }
     //Por cada simbolo de una operacion agregar uno a un contador y en base a ese contador iterar sobre el arreglo y realizar la logica necesaria?
   });
