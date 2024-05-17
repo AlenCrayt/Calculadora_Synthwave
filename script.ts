@@ -9,49 +9,78 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let linea_valores: any[] = [];
 let linea_condensada: any[] = [];
+let valor_condensado: any[];
+let valor_unido: string;
 let punto_de_partida = 0;
-let inicial_simbolo = 0
+let inicial_simbolo = 0;
 //Necesito un sistema que automaticamente declare nuevas variables para almacenar diferentes partes del arreglo separados a base de simbolos
 //Tiene que ser capaz de escalar dinamicamente en base del gran numero de operaciones que el usuario pueda ingresar
 function calcular_resultado(): void {
-  let comienzo:number;
-  let proximo_simbolo:number
+  let comienzo: number;
+  let proximo_simbolo: number;
   linea_valores.forEach((item) => {
-    console.log("Comienzo de iteracion")
+    console.log("Comienzo de iteracion");
     //Quizas algo que pueda trabajar dinamicamente con arreglos a base de una operacion?
     //Actualmente el sistema basa el indexOf en el primer elemento encontrado de ese simbolo con lo cual siempre retorna el mismo valor de indice de la operacion, ej: si hay dos + en un calculo que el usuario ingreso indexOf siempre va a retornar el indice del primer + en el array y nunca del segundo
     //Una manera de resolverlo podria ser con un iterador que recorre el arreglo uno por uno y que calcula dinamicamente la cantidad de numeros entre simbolos
-    if (item === "+" || item === "-" || item === "*" || item === "/" || item === "=") {
+    if (
+      item === "+" ||
+      item === "-" ||
+      item === "*" ||
+      item === "/" ||
+      item === "="
+    ) {
       if (punto_de_partida === 0) {
-        comienzo = linea_valores.indexOf(item)
+        comienzo = linea_valores.indexOf(item);
       } else {
-        comienzo = punto_de_partida
+        comienzo = punto_de_partida;
       }
       let posicion_simbolo = linea_valores.findIndex(
-        (simbolo, indice) =>
-          simbolo === item && indice > comienzo
+        (simbolo, indice) => simbolo === item && indice > comienzo
       );
       //El problema actualmente es que estamos usando el valor de posicion_simbolo que salta hacia el proximo valor y con eso saltea la serie de numeros entre el primer y segundo operador
-      if (punto_de_partida > linea_valores.indexOf(item)){
-        proximo_simbolo = posicion_simbolo
-        inicial_simbolo = linea_valores.lastIndexOf(item, (proximo_simbolo - 1))
-        console.log("El primer simbolo de ese tipo buscando hacia atras desde posicions simbolo esta en el indice: " + inicial_simbolo)
-      } else {
-        proximo_simbolo = linea_valores.indexOf(item)
-        inicial_simbolo = 0
+      //El iterador recorre enteramente su numero durante un solo ciclo de la iteracion superior
+      for (let i = 0; i < 2; i++) {
+        console.log("I vale a " + i);
+        if (i === 0) {
+          inicial_simbolo = 0;
+          proximo_simbolo = linea_valores.indexOf(item);
+          //Este bloque de codigo se tendria que convertir en una funcion
+          valor_condensado = linea_valores.slice(
+            inicial_simbolo,
+            proximo_simbolo
+          );
+          valor_unido = valor_condensado.join("");
+          linea_condensada.push(valor_unido);
+          console.log(linea_condensada);
+          console.log(
+            "El proximo simbolo esta en el indice: " + proximo_simbolo
+          );
+        } else if (i === 1) {
+          inicial_simbolo = linea_valores.indexOf(item) + 1;
+          proximo_simbolo = posicion_simbolo;
+          valor_condensado = linea_valores.slice(
+            inicial_simbolo,
+            proximo_simbolo
+          );
+          valor_unido = valor_condensado.join("");
+          linea_condensada.push(valor_unido);
+          console.log(linea_condensada);
+          console.log(
+            "El proximo simbolo esta en el indice: " + proximo_simbolo
+          );
+        }
       }
       console.log("La serie actual de numeros empieza en: " + punto_de_partida);
-      console.log("La posicion del proximo simbolo en el arreglo es: " + posicion_simbolo);
+      console.log(
+        "La posicion del proximo simbolo en el arreglo es: " + posicion_simbolo
+      );
       //Hay un problema en que el slice() necesita el simbolo inmediatemente proximo en su primer iteracion con lo cual posicion_simbolo no es un buen fin de posicion para usar el metodo
-      let valor_condensado = linea_valores.slice(inicial_simbolo, proximo_simbolo)
       //En la segunda pasada de la iteracion punto de partida salta a los numeros despues del segundo simbolo con lo cual valor_condensado se salta enteramente los numeros entre el primer y el segundo simbolo, tengo que averiguar como arreglarlo
-      let valor_unido = valor_condensado.join("");
-      linea_condensada.push(valor_unido);
-      console.log(linea_condensada);
       let distancia = posicion_simbolo - punto_de_partida;
       punto_de_partida = punto_de_partida + distancia + 1;
       console.log("La proxima serie de numeros empieza en:" + punto_de_partida);
-      console.log("Fin de iteracion")
+      console.log("Fin de iteracion");
     }
     //Por cada simbolo de una operacion agregar uno a un contador y en base a ese contador iterar sobre el arreglo y realizar la logica necesaria?
   });
@@ -110,7 +139,7 @@ function clickeo_boton(evento: MouseEvent) {
       linea_valores.push("/");
       break;
     case "=":
-      linea_valores.push("=")
+      linea_valores.push("=");
       calcular_resultado();
       break;
     case "C":
