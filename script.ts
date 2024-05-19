@@ -7,17 +7,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+//Declaracion de variables
 let linea_valores: any[] = [];
 let linea_condensada: any[] = [];
 let valor_condensado: any[];
 let valor_unido: string;
 let punto_de_partida = 0;
-let inicial_simbolo = 0;
+
+function agrupar_valores(principio: number, fin: number): void {
+  valor_condensado = linea_valores.slice(principio, fin);
+  valor_unido = valor_condensado.join("");
+  linea_condensada.push(valor_unido);
+}
 //Necesito un sistema que automaticamente declare nuevas variables para almacenar diferentes partes del arreglo separados a base de simbolos
 //Tiene que ser capaz de escalar dinamicamente en base del gran numero de operaciones que el usuario pueda ingresar
 function calcular_resultado(): void {
   let comienzo: number;
-  let proximo_simbolo: number;
   linea_valores.forEach((item) => {
     console.log("Comienzo de iteracion");
     //Quizas algo que pueda trabajar dinamicamente con arreglos a base de una operacion?
@@ -41,40 +46,25 @@ function calcular_resultado(): void {
       //El problema actualmente es que estamos usando el valor de posicion_simbolo que salta hacia el proximo valor y con eso saltea la serie de numeros entre el primer y segundo operador
       //El iterador recorre enteramente su numero durante un solo ciclo de la iteracion superior
       for (let i = 0; i < 2; i++) {
-        console.log("I vale a " + i);
         if (i === 0) {
-          inicial_simbolo = 0;
-          proximo_simbolo = linea_valores.indexOf(item);
-          //Este bloque de codigo se tendria que convertir en una funcion
-          valor_condensado = linea_valores.slice(
-            inicial_simbolo,
-            proximo_simbolo
-          );
-          valor_unido = valor_condensado.join("");
-          linea_condensada.push(valor_unido);
+          agrupar_valores(0, linea_valores.indexOf(item));
           console.log(linea_condensada);
           console.log(
-            "El proximo simbolo esta en el indice: " + proximo_simbolo
+            "El proximo simbolo esta en el indice: " +
+              linea_valores.indexOf(item)
           );
         } else if (i === 1) {
-          inicial_simbolo = linea_valores.indexOf(item) + 1;
-          proximo_simbolo = posicion_simbolo;
-          valor_condensado = linea_valores.slice(
-            inicial_simbolo,
-            proximo_simbolo
-          );
-          valor_unido = valor_condensado.join("");
-          linea_condensada.push(valor_unido);
+          agrupar_valores(linea_valores.indexOf(item) + 1, posicion_simbolo);
           console.log(linea_condensada);
           console.log(
-            "El proximo simbolo esta en el indice: " + proximo_simbolo
+            "El proximo simbolo esta en el indice: " + posicion_simbolo
           );
         }
       }
+      agrupar_valores(punto_de_partida, posicion_simbolo);
+      console.log(linea_condensada);
+      console.log("El proximo simbolo esta en el indice: " + posicion_simbolo);
       console.log("La serie actual de numeros empieza en: " + punto_de_partida);
-      console.log(
-        "La posicion del proximo simbolo en el arreglo es: " + posicion_simbolo
-      );
       //Hay un problema en que el slice() necesita el simbolo inmediatemente proximo en su primer iteracion con lo cual posicion_simbolo no es un buen fin de posicion para usar el metodo
       //En la segunda pasada de la iteracion punto de partida salta a los numeros despues del segundo simbolo con lo cual valor_condensado se salta enteramente los numeros entre el primer y el segundo simbolo, tengo que averiguar como arreglarlo
       let distancia = posicion_simbolo - punto_de_partida;
