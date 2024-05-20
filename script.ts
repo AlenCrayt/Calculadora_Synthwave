@@ -8,132 +8,122 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //Declaracion de variables
-let linea_valores: any[] = [];
-let linea_condensada: any[] = [];
-let valor_condensado: any[];
-let valor_unido: string;
-let punto_de_partida = 0;
+//Arreglo que contiene los conjuntos de numeros y los simbolos
+let linea_conjuntos: any[] = [];
+//Arreglo que contiene los numeros separados y que es utilizado como un almacenmiento temporal para los numeros ingresados por el usuario
+let linea_numeros: number[] = [];
+//Arreglo cuyo unico proposito es mostrar la linea de numeros y simbolos visibles al usuario
+let linea_visible: any[] = [];
 
-function agrupar_valores(principio: number, fin: number): void {
-  valor_condensado = linea_valores.slice(principio, fin);
-  valor_unido = valor_condensado.join("");
-  linea_condensada.push(valor_unido);
+//Simple funcion hecha para reducir lineas de codigo en el switch de valor_boton
+function push_a_lineas(valor: number): void {
+  linea_numeros.push(valor);
+  linea_visible.push(valor);
 }
-//Necesito un sistema que automaticamente declare nuevas variables para almacenar diferentes partes del arreglo separados a base de simbolos
-//Tiene que ser capaz de escalar dinamicamente en base del gran numero de operaciones que el usuario pueda ingresar
+
+//Funcion que realiza la agrupacion de los numeros ingresados en linea_numeros en un conjunto y agrega ese conjunto al arreglo de conjuntos junto con el simbolo que se ingreso
+function agregar_conjuntos(simbolo: string): void {
+  let conjunto = linea_numeros.join("");
+  let numeros_juntos = Number(conjunto);
+  linea_conjuntos.push(numeros_juntos);
+  linea_conjuntos.push(simbolo);
+  linea_numeros = [];
+}
+
+//Funcion que se encarga de realizar las operaciones matematicas necesarias a traves del arreglo linea_conjuntos y modifica este arreglos mediante iteracion hasta que solo queda el resultado de la operacion y un elemento vacio en el arreglo
 function calcular_resultado(): void {
-  let comienzo: number;
-  linea_valores.forEach((item) => {
-    console.log("Comienzo de iteracion");
-    //Quizas algo que pueda trabajar dinamicamente con arreglos a base de una operacion?
-    //Actualmente el sistema basa el indexOf en el primer elemento encontrado de ese simbolo con lo cual siempre retorna el mismo valor de indice de la operacion, ej: si hay dos + en un calculo que el usuario ingreso indexOf siempre va a retornar el indice del primer + en el array y nunca del segundo
-    //Una manera de resolverlo podria ser con un iterador que recorre el arreglo uno por uno y que calcula dinamicamente la cantidad de numeros entre simbolos
-    if (
-      item === "+" ||
-      item === "-" ||
-      item === "*" ||
-      item === "/" ||
-      item === "="
-    ) {
-      if (punto_de_partida === 0) {
-        comienzo = linea_valores.indexOf(item);
-      } else {
-        comienzo = punto_de_partida;
-      }
-      let posicion_simbolo = linea_valores.findIndex(
-        (simbolo, indice) => simbolo === item && indice > comienzo
-      );
-      //El problema actualmente es que estamos usando el valor de posicion_simbolo que salta hacia el proximo valor y con eso saltea la serie de numeros entre el primer y segundo operador
-      //El iterador recorre enteramente su numero durante un solo ciclo de la iteracion superior
-      for (let i = 0; i < 2; i++) {
-        if (i === 0) {
-          agrupar_valores(0, linea_valores.indexOf(item));
-          console.log(linea_condensada);
-          console.log(
-            "El proximo simbolo esta en el indice: " +
-              linea_valores.indexOf(item)
-          );
-        } else if (i === 1) {
-          agrupar_valores(linea_valores.indexOf(item) + 1, posicion_simbolo);
-          console.log(linea_condensada);
-          console.log(
-            "El proximo simbolo esta en el indice: " + posicion_simbolo
-          );
-        }
-      }
-      agrupar_valores(punto_de_partida, posicion_simbolo);
-      console.log(linea_condensada);
-      console.log("El proximo simbolo esta en el indice: " + posicion_simbolo);
-      console.log("La serie actual de numeros empieza en: " + punto_de_partida);
-      //Hay un problema en que el slice() necesita el simbolo inmediatemente proximo en su primer iteracion con lo cual posicion_simbolo no es un buen fin de posicion para usar el metodo
-      //En la segunda pasada de la iteracion punto de partida salta a los numeros despues del segundo simbolo con lo cual valor_condensado se salta enteramente los numeros entre el primer y el segundo simbolo, tengo que averiguar como arreglarlo
-      let distancia = posicion_simbolo - punto_de_partida;
-      punto_de_partida = punto_de_partida + distancia + 1;
-      console.log("La proxima serie de numeros empieza en:" + punto_de_partida);
-      console.log("Fin de iteracion");
+  let resultado: number;
+  for (let i = 0; i < linea_conjuntos.length; i++) {
+    switch (linea_conjuntos[1]) {
+      case "+":
+        resultado = linea_conjuntos[0] + linea_conjuntos[2];
+        break;
+      case "-":
+        resultado = linea_conjuntos[0] - linea_conjuntos[2];
+        break;
+      case "*":
+        resultado = linea_conjuntos[0] * linea_conjuntos[2];
+        break;
+      case "/":
+        resultado = linea_conjuntos[0] / linea_conjuntos[2];
+        break;
     }
-    //Por cada simbolo de una operacion agregar uno a un contador y en base a ese contador iterar sobre el arreglo y realizar la logica necesaria?
-  });
+    linea_conjuntos.splice(0, 3);
+    linea_conjuntos.unshift(resultado);
+    console.log(linea_conjuntos);
+  }
+  if (linea_conjuntos.length <= 2) {
+    linea_visible = [];
+    linea_visible.push(resultado);
+  }
 }
 
 //La funcion que se ejecuta cuando un boton de la calculadora es clickeado toma como parametro el evento del Mouse
 function clickeo_boton(evento: MouseEvent) {
-  //Accedemos a la "pantalla" de la calculadora
-  const pantalla_calculadora = document.querySelector("#pantalla");
   //Usamos type casting para hacerle entender a Typescript que el target del evento del mouse es un elemento de tipo boton HTML
   const objetivo = evento.target as HTMLButtonElement;
   //Ahora que Typescript entiende que esta manejando un boton HTML podemos acceder a las propiedades del boton en este caso el contenido de texto del boton
   let valor_boton = objetivo.textContent;
+  //Accedemos a la "pantalla" de la calculadora
+  const pantalla_calculadora = document.querySelector("#pantalla");
 
   switch (valor_boton) {
     case "0":
-      linea_valores.push(0);
+      push_a_lineas(0);
       break;
     case "1":
-      linea_valores.push(1);
+      push_a_lineas(1);
       break;
     case "2":
-      linea_valores.push(2);
+      push_a_lineas(2);
       break;
     case "3":
-      linea_valores.push(3);
+      push_a_lineas(3);
       break;
     case "4":
-      linea_valores.push(4);
+      push_a_lineas(4);
       break;
     case "5":
-      linea_valores.push(5);
+      push_a_lineas(5);
       break;
     case "6":
-      linea_valores.push(6);
+      push_a_lineas(6);
       break;
     case "7":
-      linea_valores.push(7);
+      push_a_lineas(7);
       break;
     case "8":
-      linea_valores.push(8);
+      push_a_lineas(8);
       break;
     case "9":
-      linea_valores.push(9);
+      push_a_lineas(9);
       break;
     case "+":
-      linea_valores.push("+");
+      agregar_conjuntos("+");
+      linea_visible.push("+");
       break;
     case "-":
-      linea_valores.push("-");
+      agregar_conjuntos("-");
+      linea_visible.push("-");
       break;
     case "*":
-      linea_valores.push("*");
+      agregar_conjuntos("*");
+      linea_visible.push("*");
       break;
     case "/":
-      linea_valores.push("/");
+      agregar_conjuntos("/");
+      linea_visible.push("/");
       break;
     case "=":
-      linea_valores.push("=");
+      agregar_conjuntos("");
+      linea_visible.push("=");
       calcular_resultado();
       break;
     case "C":
-      linea_valores = [];
+      linea_conjuntos = [];
+      linea_visible = [];
+      break;
   }
-  pantalla_calculadora.textContent = linea_valores.join("");
+  pantalla_calculadora.textContent = linea_visible.join("");
+  console.log(linea_conjuntos);
 }
