@@ -38,6 +38,11 @@ article {
   }
 }
 
+#pantalla {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 button {
   background-color: $imperial_purple;
   color: $andes_sky;
