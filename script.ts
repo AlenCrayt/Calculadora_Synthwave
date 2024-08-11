@@ -1,6 +1,7 @@
 //Codigo escrito por Agustin Santisteban, Usuario de Github: AlenCrayt
 
 //Hecho otro codigo en raiz main
+//Ahora tiene una nueva raiz de desarollo
 document.addEventListener("DOMContentLoaded", () => {
   //Cuando el contenido del DOM se carga, esta asegurado de que los elementos button existen con lo cual los accedemos mediante querySelectorAll
   const botones_calculadora = document.querySelectorAll("button");
